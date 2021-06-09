@@ -17,9 +17,84 @@ namespace PerpustakaanAPI.Controllers
         #region Books
         [HttpGet]
         [Route("GetBooks")]
-        public List<BooksResponse> GetBook()
+        public List<BooksResponse> GetBook(MS_Books Param)
         {
-            return connection.GetBooks();
+            return connection.GetBooks(Param);
+        }
+
+        [HttpPost]
+        [Route("InsertBook")]
+        public MS_Books InsertBook(MS_Books data)
+        {
+            var connection = new Action(new Context());
+            MS_Books Insert = new MS_Books()
+            {
+                BookID_PK= data.BookID_PK,
+                BookName = data.BookName,
+                BookCategoryID_FK = data.BookCategoryID_FK,
+                Description = data.Description,
+                Penerbit = data.Penerbit,
+                Penulis = data.Penulis,
+                Stok = data.Stok,
+                IsActive = data.IsActive,
+                IsDelete = data.IsDelete,
+                CreatedBy = data.CreatedBy,
+                CreatedDate= data.CreatedDate,
+                ModifiedBy=data.ModifiedBy,
+                ModifiedDate=data.ModifiedDate
+            };
+            return connection.Insert_Book(Insert);
+
+        }
+
+        [HttpPut]
+        [Route("UpdateBook")]
+        public MS_Books UpdateBook(MS_Books data)
+        {
+            var connection = new Action(new Context());
+            MS_Books Insert = new MS_Books()
+            {
+                BookID_PK = data.BookID_PK,
+                BookName = data.BookName,
+                BookCategoryID_FK = data.BookCategoryID_FK,
+                Description = data.Description,
+                Penerbit = data.Penerbit,
+                Penulis = data.Penulis,
+                Stok = data.Stok,
+                IsActive = data.IsActive,
+                IsDelete = data.IsDelete,
+                CreatedBy = data.CreatedBy,
+                CreatedDate = data.CreatedDate,
+                ModifiedBy = data.ModifiedBy,
+                ModifiedDate = data.ModifiedDate
+            };
+            return connection.Update_Book(Insert);
+
+        }
+
+        [HttpPut]
+        [Route("DeleteBook")]
+        public MS_Books DeleteBook(MS_Books data)
+        {
+            var connection = new Action(new Context());
+            MS_Books Insert = new MS_Books()
+            {
+                BookID_PK = data.BookID_PK,
+                BookName = data.BookName,
+                BookCategoryID_FK = data.BookCategoryID_FK,
+                Description = data.Description,
+                Penerbit = data.Penerbit,
+                Penulis = data.Penulis,
+                Stok = data.Stok,
+                IsActive = data.IsActive,
+                IsDelete = true,
+                CreatedBy = data.CreatedBy,
+                CreatedDate = data.CreatedDate,
+                ModifiedBy = data.ModifiedBy,
+                ModifiedDate = data.ModifiedDate
+            };
+            return connection.Update_Book(Insert);
+
         }
         #endregion
 
@@ -85,13 +160,26 @@ namespace PerpustakaanAPI.Controllers
             return connection.Get_Statuses();
         }
 
+        [HttpPost]
+        [Route("InsertStatus")]
+        public MS_Status InsertStatus(MS_Status data)
+        {
+            var connection = new Action(new Context());
+            MS_Status Insert = new MS_Status()
+            {
+                StatusID_PK = data.StatusID_PK,
+                StatusName = data.StatusName
+            };
+            return connection.Insert_Status(Insert);
+
+        }
         #endregion
 
         #region User
 
         [HttpGet]
         [Route("GetUser")]
-        public List<MS_User> GeUser()
+        public List<UserResponse> GeUser()
         {
             return connection.GetUsers();
         }
@@ -115,6 +203,48 @@ namespace PerpustakaanAPI.Controllers
                 ModifiedDate = data.ModifiedDate
             };
             return connection.Insert_User(Insert);
+        }
+
+        [HttpPut]
+        [Route("UpdateUser")]
+        public MS_User UpdateUser(MS_User data)
+        {
+            var connection = new Action(new Context());
+            MS_User Update = new MS_User()
+            {
+                UserID_PK = data.UserID_PK,
+                UserName = data.UserName,
+                Password = data.Password,
+                IsActive = data.IsActive,
+                IsDelete = data.IsDelete,
+                UserRoleID_FK = data.UserRoleID_FK,
+                CreatedBy = data.CreatedBy,
+                CreatedDate = data.CreatedDate,
+                ModifiedBy = data.ModifiedBy,
+                ModifiedDate = data.ModifiedDate
+            };
+            return connection.Put_User(Update);
+        }
+
+        [HttpPut]
+        [Route("UpdateUser")]
+        public MS_User DeleteUser(MS_User data)
+        {
+            var connection = new Action(new Context());
+            MS_User Update = new MS_User()
+            {
+                UserID_PK = data.UserID_PK,
+                UserName = data.UserName,
+                Password = data.Password,
+                IsActive = data.IsActive,
+                IsDelete = data.IsDelete,
+                UserRoleID_FK = data.UserRoleID_FK,
+                CreatedBy = data.CreatedBy,
+                CreatedDate = data.CreatedDate,
+                ModifiedBy = data.ModifiedBy,
+                ModifiedDate = data.ModifiedDate
+            };
+            return connection.Put_User(Update);
         }
 
         #endregion
@@ -146,7 +276,7 @@ namespace PerpustakaanAPI.Controllers
 
         [HttpGet]
         [Route("GetPeminjaman")]
-        public List<TR_Peminjaman> GetPeminjaman()
+        public List<PeminjamanResponse> GetPeminjaman()
         {
             return connection.GetPeminajamans();
         }

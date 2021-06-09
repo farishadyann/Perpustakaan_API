@@ -9,7 +9,7 @@ namespace PerpustakaanAPI.Entity.Tables
     public class MS_Status
     {
         [Key]
-        public int? StatusID_FK { get; set; }
+        public int? StatusID_PK { get; set; }
         public string StatusName { get; set; }
     }
 }
