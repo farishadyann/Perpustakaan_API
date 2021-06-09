@@ -72,6 +72,11 @@ namespace PerpustakaanAPI.Respository.Class
             return Result;
         }
 
+        public MS_Books GetBookByID(MS_Books Param)
+        {
+            return _context.Books.Where(x => x.BookID_PK == Param.BookID_PK).FirstOrDefault(); 
+        }
+
         public MS_Books Insert_Book(MS_Books Data)
         {
             MS_Books RetVal = new MS_Books();
@@ -340,12 +345,132 @@ namespace PerpustakaanAPI.Respository.Class
                                  join c in _context.Categories on b.BookCategoryID_FK equals c.CategoryID_PK
                                  join d in _context.Users on a.UserName equals d.UserName
                                  join e in _context.UserRoles on d.UserRoleID_FK equals e.UserRoleID_PK
+                                 join f in _context.Statuses on a.StatusID_FK equals f.StatusID_PK
                                  select new
                                  {
                                      PeminjamanID_PK = a.PeminjamanID_PK,
-                                     BookID_FK = a.BookID_FK
+                                     BookID_FK = a.BookID_FK,
+                                     BookName = b.BookName,
+                                     BookCategoryID_FK = b.BookCategoryID_FK,
+                                     Category = c.Category,
+                                     Description = b.Description,
+                                     Stok = b.Stok,
+                                     Penerbit = b.Penerbit,
+                                     Penulis = b.Penulis,
+                                     UserName = a.UserName,
+                                     UserRoleID_FK = d.UserRoleID_FK,
+                                     UserRoleName= e.UserRoleName,
+                                     StatusID_FK = a.StatusID_FK,
+                                     StatusName = f.StatusName,
+                                     AlamatPengiriman = a.AlamatPengiriman,
+                                     StartDate = a.StartDate,
+                                     EndDate = a.EndDate,
+                                     IsActive = a.IsActive,
+                                     IsDelete = a.IsDelete,
+                                     CreatedDate = a.CreatedDate,
+                                     CreatedBy = a.CreatedBy,
+                                     ModifiedDate = a.ModifiedDate,
+                                     ModifiedBy = a.ModifiedBy
                                  };
+            foreach(var data in ListPeminjaman)
+            {
+                PeminjamanResponse Peminjaman = new PeminjamanResponse()
+                {
+                    PeminjamanID_PK = data.PeminjamanID_PK,
+                    BookID_FK = data.BookID_FK,
+                    BookName = data.BookName,
+                    BookCategoryID_FK = data.BookCategoryID_FK,
+                    Category = data.Category,
+                    Description = data.Description,
+                    Stok = data.Stok,
+                    Penerbit = data.Penerbit,
+                    Penulis = data.Penulis,
+                    UserName = data.UserName,
+                    UserRoleID_FK = data.UserRoleID_FK,
+                    UserRoleName = data.UserRoleName,
+                    StatusID_FK = data.StatusID_FK,
+                    StatusName = data.StatusName,
+                    AlamatPengiriman = data.AlamatPengiriman,
+                    StartDate = data.StartDate,
+                    EndDate = data.EndDate,
+                    IsActive = data.IsActive,
+                    IsDelete = data.IsDelete,
+                    CreatedDate = data.CreatedDate,
+                    CreatedBy = data.CreatedBy,
+                    ModifiedDate = data.ModifiedDate,
+                    ModifiedBy = data.ModifiedBy
+                };
+                RetVal.Add(Peminjaman);
+            }
 
+            return RetVal;
+        }
+
+        public TR_Peminjaman GetPeminjamanByID(TR_Peminjaman Param)
+        {
+            return _context.Peminjamans.Where(x => x.PeminjamanID_PK == Param.PeminjamanID_PK).FirstOrDefault();
+        }
+
+        public TR_Peminjaman Post_Peminjaman(TR_Peminjaman Param)
+        {
+            TR_Peminjaman RetVal = new TR_Peminjaman();
+
+            using (var Transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    //Peminjaman Operation
+                    var ResponsePeminjamans = _context.Peminjamans.Add(Param);
+                    _context.SaveChanges();
+                    RetVal = ResponsePeminjamans.Entity;
+                    Transaction.Commit();
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return RetVal;
+        }
+
+        public TR_Peminjaman Put_Peminjaman(TR_Peminjaman Param)
+        {
+            TR_Peminjaman RetVal = new TR_Peminjaman();
+            using (var Transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    //Peminjaman Operation
+                    TR_Peminjaman OldDataPeminjaman = GetPeminjamanByID(new TR_Peminjaman { PeminjamanID_PK = Param.PeminjamanID_PK });
+                    var ResponsePeminjamans = _context.Peminjamans.Update(Param);
+                    _context.SaveChanges();
+                    RetVal = ResponsePeminjamans.Entity;
+
+                    //Books Operation
+
+                    MS_Books BooksByID = GetBookByID(new MS_Books() { BookID_PK = RetVal.BookID_FK });
+                    if (RetVal.StatusID_FK == 2)
+                    {
+                        BooksByID.Stok = Convert.ToInt32(BooksByID.Stok) - 1;
+                        var ResponseBooks = _context.Books.Update(BooksByID);
+                        _context.SaveChanges();
+                    }
+                    else if (RetVal.StatusID_FK == 4)
+                    {
+                        BooksByID.Stok = Convert.ToInt32(BooksByID.Stok) + 1;
+                        var ResponseBooks = _context.Books.Update(BooksByID);
+                        _context.SaveChanges();
+                    }
+
+                    Transaction.Commit();
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
             return RetVal;
         }
         #endregion

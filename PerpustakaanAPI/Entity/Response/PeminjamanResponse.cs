@@ -20,6 +20,7 @@ namespace PerpustakaanAPI.Entity.Response
         public int? UserRoleID_FK { get; set; }
         public string UserRoleName { get; set; }
         public int? StatusID_FK { get; set; }
+        public string StatusName { get; set; }
         public string AlamatPengiriman { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
