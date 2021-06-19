@@ -220,7 +220,7 @@ namespace PerpustakaanAPI.Respository.Class
             List<UserResponse> RetVal = new List<UserResponse>();
             var ListUser = from a in _context.Users
                            join b in _context.UserRoles on a.UserRoleID_FK equals b.UserRoleID_PK
-                           where (a.IsActive == true && a.IsDelete == false)
+                           where (a.IsDelete == false)
                            select new 
                            {
                                oUserID_PK = a.UserID_PK,
@@ -256,6 +256,12 @@ namespace PerpustakaanAPI.Respository.Class
 
 
             return RetVal;
+        }
+
+        public MS_User UserAuthentications(MS_User Param)
+        {
+            Param.Password = _cryptography.Encrypt(Param.Password);
+            return _context.Users.Where(x => x.UserName == Param.UserName && x.Password==Param.Password && x.IsActive == true && x.IsDelete == false).FirstOrDefault();
         }
 
         public MS_User Insert_User(MS_User Data)

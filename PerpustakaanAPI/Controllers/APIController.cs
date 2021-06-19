@@ -15,11 +15,15 @@ namespace PerpustakaanAPI.Controllers
         private readonly Action connection = new Action(new Core.Context());
 
         #region Books
-        [HttpGet]
+        [HttpPost]
         [Route("GetBooks")]
-        public List<BooksResponse> GetBook(MS_Books Param)
+        public JsonResult GetBook(MS_Books Param)
         {
-            return connection.GetBooks(Param);
+            //MS_Books Param = new MS_Books();
+            List<BooksResponse> res= connection.GetBooks(Param);
+
+            JsonResult Result = new JsonResult(res);
+            return Result;
         }
 
         [HttpPost]
@@ -182,6 +186,13 @@ namespace PerpustakaanAPI.Controllers
         public List<UserResponse> GeUser()
         {
             return connection.GetUsers();
+        }
+
+        [HttpPost]
+        [Route("UserAuthentication")]
+        public MS_User UserAuthentication(MS_User Param)
+        {
+            return connection.UserAuthentications(Param);
         }
 
         [HttpPost]
