@@ -260,11 +260,11 @@ namespace PerpustakaanAPI.Respository.Class
 
         public MS_User UserAuthentications(MS_User Param)
         {
-            Param.Password = _cryptography.Encrypt(Param.Password);
-            return _context.Users.Where(x => x.UserName == Param.UserName && x.Password==Param.Password && x.IsActive == true && x.IsDelete == false).FirstOrDefault();
+            //Param.Password = _cryptography.Encrypt(Param.Password);
+            return _context.Users.Where(x => x.UserName == Param.UserName && x.IsDelete == false).FirstOrDefault();
         }
 
-        public MS_User Insert_User(MS_User Data)
+        public MS_User Create(MS_User Data)
         {
             MS_User RetVal = new MS_User();
             using (var Transaction = _context.Database.BeginTransaction())
@@ -272,8 +272,6 @@ namespace PerpustakaanAPI.Respository.Class
                 try
                 {
                     //Encrypt Password
-                    Data.Password = _cryptography.Encrypt(Data.Password);
-
                     var Response = _context.Users.Add(Data);
                     _context.SaveChanges();
                     Transaction.Commit();

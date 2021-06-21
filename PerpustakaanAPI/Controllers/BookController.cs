@@ -15,13 +15,13 @@ namespace PerpustakaanAPI.Controllers
         #region Books
         [HttpPost]
         [Route("GetBooks")]
-        public JsonResult GetBook(MS_Books Param)
+        public List<BooksResponse> GetBook(MS_Books Param)
         {
             //MS_Books Param = new MS_Books();
             List<BooksResponse> res = connection.GetBooks(Param);
 
             JsonResult Result = new JsonResult(res);
-            return Result;
+            return res;
         }
 
         [HttpPost]
